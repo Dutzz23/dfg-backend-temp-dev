@@ -11,7 +11,7 @@ services:
     volumes:
       - dfg_database_data:/var/lib/mysql:rw
     ports:
-      - "3306:3306"
+      - "3307:3306"
     expose:
       - "3306"
 
@@ -22,7 +22,7 @@ services:
     expose:
       - 6379
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - dfg_redis_data:/data
     command: redis-server --save 20 1 --loglevel warning --requirepass fcjuq5a56QgvB8cb

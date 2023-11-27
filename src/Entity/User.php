@@ -8,7 +8,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -23,10 +22,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
+    #[ORM\OneToOne(targetEntity: UserData::class)]
+    #[ORM\JoinColumn(name: 'user_data_id', referencedColumnName: 'id', nullable: true)]
+    private ?UserData $userData = null;
 
     public function getId(): ?int
     {
@@ -52,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
@@ -96,5 +98,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return UserData
+     */
+    public function getUserData(): UserData
+    {
+        return $this->userData;
+    }
+
+    /**
+     * @param UserData $userData
+     * @return User
+     */
+    public function setUserData(UserData $userData): User
+    {
+        $this->userData = $userData;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        if ($this->userData !== null) {
+            return $this->userData->getFullName();
+        }
+        return $this->username;
     }
 }
