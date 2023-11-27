@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  database:
+    container_name: "dfg-database"
+    image: mysql:8.2
+    environment:
+      MYSQL_ROOT_PASSWORD: qznF1Jz0spDZPDH
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: BnQylG8wv2ozk8j
+    volumes:
+      - dfg_database_data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+
+  cache:
+    container_name: "dfg-redis-cache"
+    image: redis:latest
+    restart: always
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    volumes:
+      - dfg_redis_data:/data
+    command: redis-server --save 20 1 --loglevel warning --requirepass fcjuq5a56QgvB8cb
+
+  app:
+    container_name: "dfg-app"
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+      - dfg_logs:/var/log
+    depends_on:
+      - database
+      - cache
+    links:
+      - database
+      - cache
+    environment:
+      - "REDIS_HOST=cache"
+      - "REDIS_PORT=6379"
+      - "REDIS_PASSWORD=fcjuq5a56QgvB8cb"
+      - "KERNEL_CLASS=App\\Kernel"
+      - "DATABASE_URL=mysql://dev:BnQylG8wv2ozk8j@database:3306/dfg-data?serverVersion=8.2&charset=utf8"
+
+volumes:
+  dfg_database_data:
+  dfg_redis_data:
+  dfg_logs:

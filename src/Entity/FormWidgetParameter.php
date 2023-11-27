@@ -6,7 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-class FormWidgetOption
+class FormWidgetParameter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +21,7 @@ class FormWidgetOption
         return $this->id;
     }
 
-    public function setId(int $id): FormWidgetOption
+    public function setId(int $id): FormWidgetParameter
     {
         $this->id = $id;
         return $this;
@@ -32,7 +32,7 @@ class FormWidgetOption
         return $this->name;
     }
 
-    public function setName(string $name): FormWidgetOption
+    public function setName(string $name): FormWidgetParameter
     {
         $this->name = $name;
         return $this;
