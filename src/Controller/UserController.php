@@ -7,7 +7,10 @@ use App\DTO\UserData as ImmutableUserDataSource;
 use App\Entity\UserData as UserDataEntity;
 use App\Lib\ObjectUpdater;
 use App\Service\UserService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\Persistence\ManagerRegistry;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use ReflectionException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,11 +26,20 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/api/user/create', name: 'api_create_user', methods: ['POST'])]
-    public function createUser(Request $request): JsonResponse
+    #[Route(path: '/api/register', name: 'api_create_user', methods: ['POST'])]
+    public function createUser(
+        Request $request,
+        AuthenticationSuccessHandler $authenticator,
+        JWTTokenManagerInterface $tokenizer
+    ): JsonResponse
     {
-        if ($this->service->createUser($request->getPayload()->all())) {
-            return new JsonResponse('User created successfully', Response::HTTP_CREATED);
+        try {
+            $user = $this->service->createUser($request->getPayload()->all());
+        } catch(UniqueConstraintViolationException $exception) {
+            return new JsonResponse('Invalid username', Response::HTTP_EXPECTATION_FAILED);
+        }
+        if ($user !== false) {
+            return $authenticator->handleAuthenticationSuccess($user, $tokenizer->create($user));
         }
         return new JsonResponse('User creation failed', Response::HTTP_BAD_REQUEST);
     }

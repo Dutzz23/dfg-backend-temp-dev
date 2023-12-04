@@ -22,7 +22,8 @@
         "symfony/yaml": "6.3.*",
         "symfony/validator": "6.3.*",
         "symfony/security-bundle": "6.3.*",
-        "lexik/jwt-authentication-bundle": "^2.19.1"
+        "lexik/jwt-authentication-bundle": "^2.19.1",
+        "nelmio/cors-bundle": "^2.3.1"
     },
     "require-dev": {
         "symfony/maker-bundle": "^v1.51.1"

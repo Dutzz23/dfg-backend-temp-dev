@@ -4,9 +4,11 @@ namespace App\Service;
 
 use App\Entity\Form;
 use App\Entity\User;
+use App\Entity\UserData;
 use App\Entity\UserForms;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -22,44 +24,66 @@ class UserService
     ) {
     }
 
-    public function createUser(array $userData): bool
+    public function createUser(array $registerInput): User|false
     {
-        if (!$this->validateData($userData)) {
+        if (!$this->validateData($registerInput)) {
             return false;
         }
         if ($this->repository->findOneBy([
-                'username' => $userData['username']
+                'username' => $registerInput['username']
             ]) !== null) {
             return false;
         }
         $newUser = (new User())
-            ->setUsername($userData['username']);
+            ->setUsername($registerInput['username']);
 
-        $newUser->setPassword($this->passwordHasher->hashPassword($newUser, $userData['password']));
+        $this->setUserData($newUser, $registerInput);
+
+        $newUser->setPassword($this->passwordHasher->hashPassword($newUser, $registerInput['password']));
         $this->registryManager->getManager()->persist($newUser);
         try {
             $this->registryManager->getManager()->flush();
         } catch (Throwable) {
             return false;
         }
+        return $newUser;
+    }
+
+    private function validateData(array $registerInput): bool
+    {
+        if (!array_key_exists('username', $registerInput)) {
+            return false;
+        }
+        if (!array_key_exists('password', $registerInput)) {
+            return false;
+        }
+        if (empty($registerInput['username'])) {
+            return false;
+        }
+        if (empty($registerInput['password'])) {
+            return false;
+        }
         return true;
     }
 
-    private function validateData(array $userData): bool
-    {
-        if (!array_key_exists('username', $userData)) {
-            return false;
+    private function setUserData(User $newUser, array $registerInput): void {
+
+        $newUserData = (new UserData());
+
+        if(!empty($registerInput['firstName'])) {
+            $newUserData->setFirstName($registerInput['firstName']);
         }
-        if (!array_key_exists('password', $userData)) {
-            return false;
+        if(!empty($registerInput['lastName'])) {
+            $newUserData->setLastName($registerInput['lastName']);
         }
-        if (empty($userData['username'])) {
-            return false;
+        if(!empty($registerInput['email'])) {
+            $newUserData->setEmail($registerInput['email']);
         }
-        if (empty($userData['password'])) {
-            return false;
-        }
-        return true;
+
+        $this->registryManager->getManager()->persist($newUserData);
+        $this->registryManager->getManager()->flush();
+
+        $newUser->setUserData($newUserData);
     }
 
     public function deleteUser(int $userId): bool
@@ -79,10 +103,10 @@ class UserService
 
     private function validateId(int $id): User|false
     {
-        if ($this->repository->find($id) === null) {
+        if (($user = $this->repository->find($id)) === null) {
             return false;
         }
-        return true;
+        return $user;
     }
 
     public function attachForm(Form $form): int
