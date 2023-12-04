@@ -21,8 +21,11 @@ class Form
     #[ORM\InverseJoinColumn(name: 'item_id', referencedColumnName: 'id')]
     private Collection $formItems;
 
-    #[ORM\Column(Types::STRING)]
+    #[ORM\Column(type: Types::STRING)]
     private string $name;
+
+    #[ORM\Column(type: Types::STRING)]
+    private string $description;
 
     public function __construct() {
         $this->formItems = new ArrayCollection();
@@ -66,6 +69,15 @@ class Form
         if($this->formItems->contains($item)) {
             $this->formItems->removeElement($item);
         }
+        return $this;
+    }
+
+    public function getDescription(): string {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): Form {
+        $this->description = $description;
         return $this;
     }
 }

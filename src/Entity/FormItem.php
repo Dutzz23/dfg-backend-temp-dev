@@ -19,8 +19,10 @@ class FormItem
     #[ORM\ManyToOne(targetEntity: FormWidget::class)]
     private FormWidget $formWidget;
 
+    #[ORM\Column(type: Types::STRING)]
     private string $name;
 
+    #[ORM\Column(type: Types::STRING)]
     private string $description;
 
     #[ORM\ManyToMany(targetEntity: FormWidgetParameterValue::class)]

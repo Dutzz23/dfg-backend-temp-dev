@@ -22,10 +22,6 @@ class FormWidget
     #[ORM\Column(type: Types::STRING)]
     private string $uiComponentName;
 
-    public function __construct() {
-        $this->parameters = new ArrayCollection();
-    }
-
     public function getId(): int {
         return $this->id;
     }

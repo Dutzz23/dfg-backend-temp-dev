@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\FormWidgetParameterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FormWidgetParameterRepository::class)]
 class FormWidgetParameter
 {
     #[ORM\Id]

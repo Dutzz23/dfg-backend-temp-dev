@@ -18,8 +18,8 @@ class UserForms
     #[ORM\OneToOne]
     private User $user;
 
-    #[ORM\ManyToMany(targetEntity: FormValues::class)]
-    #[ORM\JoinTable(name: 'user_form_values')]
+    #[ORM\ManyToMany(targetEntity: Form::class)]
+    #[ORM\JoinTable(name: 'users_forms')]
     #[ORM\JoinColumn(name: 'user_form_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'form_values_id', referencedColumnName: 'id')]
     private Collection $forms;
@@ -63,19 +63,19 @@ class UserForms
         return $this->forms;
     }
 
-    public function addForm(FormValues $formValues)
+    public function addForm(Form $form)
     {
-        if (!$this->forms->contains($formValues)) {
-            $this->forms->add($formValues);
+        if (!$this->forms->contains($form)) {
+            $this->forms->add($form);
         }
         return $this;
     }
 
 
-    public function removeForm(FormValues $formValues)
+    public function removeForm(Form $form)
     {
-        if ($this->forms->contains($formValues)) {
-            $this->forms->removeElement($formValues);
+        if ($this->forms->contains($form)) {
+            $this->forms->removeElement($form);
         }
         return $this;
     }
