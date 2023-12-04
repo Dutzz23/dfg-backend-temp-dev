@@ -23,7 +23,7 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/user/create', name: 'api_create_user', methods: ['POST'])]
+    #[Route(path: '/api/user/create', name: 'api_create_user', methods: ['POST'])]
     public function createUser(Request $request): JsonResponse
     {
         if ($this->service->createUser($request->getPayload()->all())) {
