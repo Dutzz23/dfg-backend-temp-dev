@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\FormWidgetParameterRepository;
+use App\Repository\FormWidgetParameterValueRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: FormWidgetParameterRepository::class)]
+#[ORM\Entity(repositoryClass: FormWidgetParameterValueRepository::class)]
 class FormWidgetParameterValue
 {
     #[ORM\Id]
@@ -15,7 +15,7 @@ class FormWidgetParameterValue
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: FormWidgetParameter::class)]
-    private FormWidgetParameter $option;
+    private FormWidgetParameter $parameter;
 
     #[ORM\Column(Types::STRING)]
     private string $value;
@@ -31,14 +31,14 @@ class FormWidgetParameterValue
         return $this;
     }
 
-    public function getOption(): FormWidgetParameter
+    public function getParameter(): FormWidgetParameter
     {
-        return $this->option;
+        return $this->parameter;
     }
 
-    public function setOption(FormWidgetParameter $option): FormWidgetParameterValue
+    public function setParameter(FormWidgetParameter $parameter): FormWidgetParameterValue
     {
-        $this->option = $option;
+        $this->parameter = $parameter;
         return $this;
     }
 

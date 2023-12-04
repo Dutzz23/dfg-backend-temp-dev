@@ -3,21 +3,20 @@
 namespace App\Service;
 
 use App\Entity\Form;
-use App\Entity\FormValues;
 use App\Entity\User;
 use App\Entity\UserForms;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
 class UserService
 {
     public function __construct(
         private readonly UserRepository $repository,
-        private readonly PasswordHasherInterface $passwordHasher,
+        private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ManagerRegistry $registryManager,
         private readonly Security $security
     ) {
@@ -34,42 +33,13 @@ class UserService
             return false;
         }
         $newUser = (new User())
-            ->setUsername($userData['username'])
-            ->setPassword($this->passwordHasher->hash($userData['password']));
+            ->setUsername($userData['username']);
+
+        $newUser->setPassword($this->passwordHasher->hashPassword($newUser, $userData['password']));
         $this->registryManager->getManager()->persist($newUser);
         try {
             $this->registryManager->getManager()->flush();
         } catch (Throwable) {
-            return false;
-        }
-        return true;
-    }
-
-    public function getUser(int $id): User|int {
-        $user = $this->repository->find($id);
-        if($user === null) {
-            return 0;
-        }
-        return $user;
-    }
-
-    public function deleteUser(int $userId): bool {
-        $user = $this->validateId($userId);
-        if ($user === false) {
-            return false;
-        }
-        $this->registryManager->getManager()->remove($user);
-        try {
-            $this->registryManager->getManager()->flush();
-        } catch (Throwable) {
-            return false;
-        }
-        return true;
-    }
-
-    private function validateId(int $id): User|false
-    {
-        if($this->repository->find($id) === null) {
             return false;
         }
         return true;
@@ -92,13 +62,36 @@ class UserService
         return true;
     }
 
+    public function deleteUser(int $userId): bool
+    {
+        $user = $this->validateId($userId);
+        if ($user === false) {
+            return false;
+        }
+        $this->registryManager->getManager()->remove($user);
+        try {
+            $this->registryManager->getManager()->flush();
+        } catch (Throwable) {
+            return false;
+        }
+        return true;
+    }
+
+    private function validateId(int $id): User|false
+    {
+        if ($this->repository->find($id) === null) {
+            return false;
+        }
+        return true;
+    }
+
     public function attachForm(Form $form): int
     {
         $userForms = $this->registryManager->getRepository(UserForms::class)
             ->findOneBy([
                 'user' => $this->security->getUser(),
             ]);
-        if($userForms === null) {
+        if ($userForms === null) {
             return Response::HTTP_NOT_FOUND;
         }
         $userForms->addForm($form);
@@ -110,5 +103,14 @@ class UserService
         }
 
         return Response::HTTP_OK;
+    }
+
+    public function getUser(int $id): User|int
+    {
+        $user = $this->repository->find($id);
+        if ($user === null) {
+            return 0;
+        }
+        return $user;
     }
 }

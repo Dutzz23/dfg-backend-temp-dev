@@ -8,7 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class FormItemWidgetService
 {
-    public const WIDGET_FORM_ITEM_TYPE = 'formItemType';
+    public const WIDGET_FORM_ITEM_TYPE = 'formType';
     public const WIDGET_UI_COMPONENT_NAME = 'uiComponentName';
 
     public static function getOrCreate(

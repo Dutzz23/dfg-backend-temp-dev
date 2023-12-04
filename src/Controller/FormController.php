@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\DTO\Form as ImmutableFormInput;
 use App\Service\FormService;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FormController
+class FormController extends AbstractController
 {
     public function __construct(
         private readonly FormService $service
@@ -19,7 +20,7 @@ class FormController
     }
 
     #[Route(path: '/api/form/create/public', name: 'api_form_create', methods: ['POST'])]
-    public function createForm(Request $request, ManagerRegistry $registry): JsonResponse
+    public function createPublicForm(Request $request, ManagerRegistry $registry): JsonResponse
     {
         if($this->service->create(
                 ImmutableFormInput::create($request, $registry)

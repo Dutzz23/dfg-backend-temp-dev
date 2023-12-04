@@ -9,12 +9,13 @@ use App\Lib\ObjectUpdater;
 use App\Service\UserService;
 use Doctrine\Persistence\ManagerRegistry;
 use ReflectionException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController
+class UserController extends AbstractController
 {
     public function __construct(
         private readonly UserService $service,
@@ -22,7 +23,7 @@ class UserController
     ) {
     }
 
-    #[Route(path: '/api/user/create', name: 'api_create_user', methods: ['POST'])]
+    #[Route(path: '/user/create', name: 'api_create_user', methods: ['POST'])]
     public function createUser(Request $request): JsonResponse
     {
         if ($this->service->createUser($request->getPayload()->all())) {
@@ -32,7 +33,7 @@ class UserController
     }
 
     #[Route(path: '/api/user/{id}', name: 'api_get_user', methods: ['GET'])]
-    public function getUser(int $id, ManagerRegistry $registry): JsonResponse
+    public function getSingleUser(int $id, ManagerRegistry $registry): JsonResponse
     {
         $user = $this->service->getUser($id);
         if($user === 0) {

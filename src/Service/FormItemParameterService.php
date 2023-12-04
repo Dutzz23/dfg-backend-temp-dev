@@ -15,20 +15,22 @@ class FormItemParameterService
     ): FormWidgetParameterValue
     {
         $option = self::createOrGetOption($parameterName, $registry);
-        $value = $registry->getRepository(FormWidgetParameterValue::class)->findOneBy([
-            'value' => $parameterValue,
-            'option' => $option
+        $value = $registry->getManager()->getRepository(FormWidgetParameterValue::class)->findOneBy([
+            'parameter' => $option,
+            'value' => $parameterValue
         ]);
         if($value === null) {
             $value = (new FormWidgetParameterValue())
                 ->setValue($parameterValue)
-                ->setOption($option);
+                ->setParameter($option);
+            $registry->getManager()->persist($value);
+            $registry->getManager()->flush();
         }
         return $value;
     }
 
     private static function createOrGetOption(string $name, ManagerRegistry $registry): FormWidgetParameter {
-        $parameter = $registry->getRepository(FormWidgetParameter::class)->findOneBy([
+        $parameter = $registry->getManager()->getRepository(FormWidgetParameter::class)->findOneBy([
             'name' => $name
         ]);
         if($parameter === null) {

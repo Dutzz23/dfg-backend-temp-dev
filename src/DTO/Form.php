@@ -17,8 +17,7 @@ class Form extends AbstractIoDTO implements IoDTO
     private const REQUIRED_FORM_ITEM_INDEXES = [
         FormItemService::FORM_ITEM_NAME,
         FormItemService::FORM_ITEM_DESCRIPTION,
-        FormItemWidgetService::WIDGET_FORM_ITEM_TYPE,
-        FormItemWidgetService::WIDGET_UI_COMPONENT_NAME
+        FormItemService::FORM_ITEM_PARAMETERS
     ];
 
     private static ManagerRegistry $registry;
@@ -74,8 +73,8 @@ class Form extends AbstractIoDTO implements IoDTO
             $formItem[FormItemService::FORM_ITEM_DESCRIPTION],
             $formItem[FormItemService::FORM_ITEM_PARAMETERS],
             FormItemWidgetService::getOrCreate(
-                $formItem[FormItemWidgetService::WIDGET_FORM_ITEM_TYPE],
-                $formItem[FormItemWidgetService::WIDGET_UI_COMPONENT_NAME],
+                $formItem['widget'][FormItemWidgetService::WIDGET_FORM_ITEM_TYPE],
+                $formItem['widget'][FormItemWidgetService::WIDGET_UI_COMPONENT_NAME],
                 self::$registry
             ),
             self::$registry
