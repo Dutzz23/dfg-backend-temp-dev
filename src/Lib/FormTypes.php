@@ -13,7 +13,8 @@ enum FormTypes: int
     case DATE = 7;
     case IMAGE = 8;
 
-    public function getAsString(): string {
+    public function getAsString(): string
+    {
         return match ($this) {
             self::INPUT => 'Short input',
             self::TEXT => 'Paragraph',

@@ -9,8 +9,8 @@ use App\Service\FormItemService;
 use App\Service\FormItemWidgetService;
 use App\Service\FormService;
 use Doctrine\Persistence\ManagerRegistry;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
-use \InvalidArgumentException;
 
 class Form extends AbstractIoDTO implements IoDTO
 {
@@ -30,16 +30,16 @@ class Form extends AbstractIoDTO implements IoDTO
          * @var FormItem[]
          */
         private readonly array $formItems,
-    )
-    {
+    ) {
     }
 
-    public static function create(Request|int $request, ManagerRegistry $registry = null): self {
-        if(!($request instanceof Request)) {
+    public static function create(Request|int $request, ManagerRegistry $registry = null): self
+    {
+        if (!($request instanceof Request)) {
             throw new InvalidArgumentException('Do not use ids for form creation');
         }
 
-        if(self::$instance === null) {
+        if (self::$instance === null) {
             self::$registry = $registry;
             self::$instance = self::createForm($request->getPayload()->all());
         }
@@ -48,22 +48,23 @@ class Form extends AbstractIoDTO implements IoDTO
 
     private static function createForm(array $payload): static
     {
-        if(!isset($payload['formItems'])) {
+        if (!isset($payload['formItems'])) {
             throw new InvalidArgumentException('A form should always have form items, aka not be empty');
         }
         $formItems = [];
-        foreach($payload['formItems'] as $formItem) {
+        foreach ($payload['formItems'] as $formItem) {
             $formItems[] = self::processFormItem($formItem);
         }
-        return  new static(
+        return new static(
             $payload[FormService::FORM_NAME],
             $payload[FormService::FORM_DESCRIPTION],
             $formItems
         );
     }
 
-    private static function processFormItem(array $formItem): FormItem {
-        if(!self::hasAllFieldsDefined($formItem, $missing)) {
+    private static function processFormItem(array $formItem): FormItem
+    {
+        if (!self::hasAllFieldsDefined($formItem, $missing)) {
             throw new InvalidArgumentException(
                 sprintf('The following properties are missing %s', implode(', ', $missing))
             );
@@ -81,10 +82,11 @@ class Form extends AbstractIoDTO implements IoDTO
         );
     }
 
-    private static function hasAllFieldsDefined(array $formItem, null|array &$missing=[]): bool {
+    private static function hasAllFieldsDefined(array $formItem, null|array &$missing = []): bool
+    {
         $result = true;
-        foreach(self::REQUIRED_FORM_ITEM_INDEXES as $key) {
-            if(!isset($formItem[$key])) {
+        foreach (self::REQUIRED_FORM_ITEM_INDEXES as $key) {
+            if (!isset($formItem[$key])) {
                 $missing[] = $key;
                 $result = false;
             }

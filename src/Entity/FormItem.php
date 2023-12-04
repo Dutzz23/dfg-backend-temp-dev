@@ -31,7 +31,8 @@ class FormItem
     #[ORM\InverseJoinColumn(name: 'parameter_value_id', referencedColumnName: 'id')]
     private Collection $parameterValues;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->parameterValues = new ArrayCollection();
     }
 
@@ -84,15 +85,17 @@ class FormItem
         return $this->parameterValues;
     }
 
-    public function addParameterValue(FormWidgetParameterValue $value) {
-        if(!$this->parameterValues->contains($value)) {
+    public function addParameterValue(FormWidgetParameterValue $value)
+    {
+        if (!$this->parameterValues->contains($value)) {
             $this->parameterValues->add($value);
         }
         return $this;
     }
 
-    public function removeParameterValue(FormWidgetParameterValue $value) {
-        if($this->parameterValues->contains($value)) {
+    public function removeParameterValue(FormWidgetParameterValue $value)
+    {
+        if ($this->parameterValues->contains($value)) {
             $this->parameterValues->removeElement($value);
         }
         return $this;

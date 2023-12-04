@@ -3,10 +3,8 @@
 namespace App\Lib;
 
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
 use ReflectionClass;
 use ReflectionException;
-use ReturnTypeWillChange;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Throwable;
 
@@ -16,7 +14,7 @@ class ObjectUpdater
     public function __construct(
         private readonly ManagerRegistry $registryManager,
         private readonly PropertyAccessorInterface $propertyAccessor
-    ){
+    ) {
     }
 
     /**
@@ -26,12 +24,12 @@ class ObjectUpdater
     {
         $repository = $this->registryManager->getRepository($destination);
         $updatableObject = $repository->find($id);
-        if($updatableObject === null) {
+        if ($updatableObject === null) {
             return false;
         }
-        foreach((new ReflectionClass($destination))->getProperties() as $property) {
+        foreach ((new ReflectionClass($destination))->getProperties() as $property) {
             $newValue = $this->propertyAccessor->getValue($source, $property->getName());
-            if($newValue === null) {
+            if ($newValue === null) {
                 continue;
             }
             $this->propertyAccessor->setValue($updatableObject, $property->getName(), $newValue);

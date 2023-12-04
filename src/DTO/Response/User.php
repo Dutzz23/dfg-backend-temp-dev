@@ -2,7 +2,7 @@
 
 namespace App\DTO\Response;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Lib\AbstractIoDTO;
 use App\Lib\IoDTO;

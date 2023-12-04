@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 class Form
@@ -27,7 +27,8 @@ class Form
     #[ORM\Column(type: Types::STRING)]
     private string $description;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->formItems = new ArrayCollection();
     }
 
@@ -58,25 +59,29 @@ class Form
         return $this->formItems;
     }
 
-    public function addFormItem(FormItem $item) {
-        if(!$this->formItems->contains($item)) {
+    public function addFormItem(FormItem $item)
+    {
+        if (!$this->formItems->contains($item)) {
             $this->formItems->add($item);
         }
         return $this;
     }
 
-    public function removeFormItem(FormItem $item) {
-        if($this->formItems->contains($item)) {
+    public function removeFormItem(FormItem $item)
+    {
+        if ($this->formItems->contains($item)) {
             $this->formItems->removeElement($item);
         }
         return $this;
     }
 
-    public function getDescription(): string {
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
-    public function setDescription(string $description): Form {
+    public function setDescription(string $description): Form
+    {
         $this->description = $description;
         return $this;
     }

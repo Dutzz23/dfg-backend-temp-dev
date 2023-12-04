@@ -4,8 +4,9 @@ namespace App\DTO;
 
 use App\Lib\AbstractIoDTO;
 use App\Lib\IoDTO;
-use http\Exception\InvalidArgumentException;
 use Doctrine\Persistence\ManagerRegistry;
+
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserData extends AbstractIoDTO implements IoDTO
@@ -16,12 +17,12 @@ class UserData extends AbstractIoDTO implements IoDTO
         private readonly ?string $firstName,
         private readonly ?string $lastName,
         private readonly ?string $email
-    )
-    {
+    ) {
     }
 
-    public static function create(Request|int $request, ManagerRegistry $registry = null): self {
-        if(!($request instanceof Request)) {
+    public static function create(Request|int $request, ManagerRegistry $registry = null): self
+    {
+        if (!($request instanceof Request)) {
             throw new InvalidArgumentException('Do not use ids for user data searches');
         }
         return static::getInstance($request);

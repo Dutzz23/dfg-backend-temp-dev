@@ -9,5 +9,5 @@ use Symfony\Component\HttpFoundation\Request;
 interface IoDTO
 {
     #[ReturnTypeWillChange]
-    public static function create(Request|int $request, ManagerRegistry $registry=null): object;
+    public static function create(Request|int $request, ManagerRegistry $registry = null): object;
 }
