@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Form as ImmutableFormInput;
+use App\DTO\Response\FormResponse;
 use App\Service\FormService;
 use App\Service\UserService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,7 +46,7 @@ class FormController extends AbstractController
         if($form === null) {
             return new JsonResponse('Not found', Response::HTTP_NOT_FOUND);
         }
-        return new JsonResponse($this->serializer->serialize($form, 'json'), Response::HTTP_OK, [], true);
+        return new JsonResponse($this->serializer->serialize(FormResponse::create($form), 'json'), Response::HTTP_OK, [], true);
     }
 
     #[Route(path: '/api/form/user/all', name: 'api_form_get_for_user', methods: ['GET'])]

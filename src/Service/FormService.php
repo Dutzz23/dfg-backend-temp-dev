@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\DTO\Form;
+use App\Entity\Form;
 use App\DTO\Form as ImmutableFormInput;
 use App\Entity\Form as FormEntity;
 use App\Entity\FormItem;
@@ -51,9 +51,13 @@ class FormService
         return $form;
     }
 
-    public function getById(int $id): ?FormEntity
+    public function getById(int $id): ?Form
     {
-        return $this->registry->getRepository(FormEntity::class)->find($id);
+        $form = $this->registry->getRepository(FormEntity::class)->find($id);
+        if($form === null) {
+            return null;
+        }
+        return $form;
     }
 
     public function getFormsForUser(UserInterface $user, bool $shortVersion = false): array

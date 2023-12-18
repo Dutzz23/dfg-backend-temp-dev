@@ -72,7 +72,7 @@ class FormItem
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -91,7 +91,7 @@ class FormItem
         return $this->parameterValues;
     }
 
-    public function addParameterValue(FormWidgetParameterValue $value)
+    public function addParameterValue(FormWidgetParameterValue $value): static
     {
         if (!$this->parameterValues->contains($value)) {
             $this->parameterValues->add($value);
@@ -99,7 +99,7 @@ class FormItem
         return $this;
     }
 
-    public function removeParameterValue(FormWidgetParameterValue $value)
+    public function removeParameterValue(FormWidgetParameterValue $value): static
     {
         if ($this->parameterValues->contains($value)) {
             $this->parameterValues->removeElement($value);
