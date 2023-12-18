@@ -14,7 +14,7 @@ class FormValues
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\ManyToOne(targetEntity: Form::class)]
     private Form $form;

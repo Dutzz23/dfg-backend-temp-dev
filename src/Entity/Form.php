@@ -14,7 +14,7 @@ class Form
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\ManyToMany(targetEntity: FormItem::class)]
     #[ORM\JoinTable(name: 'form_items')]

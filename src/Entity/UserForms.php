@@ -14,7 +14,7 @@ class UserForms
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\OneToOne]
     private User $user;

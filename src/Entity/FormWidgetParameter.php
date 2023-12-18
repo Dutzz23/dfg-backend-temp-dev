@@ -12,7 +12,7 @@ class FormWidgetParameter
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\Column(Types::STRING)]
     private string $name;

@@ -14,7 +14,7 @@ class FormItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\ManyToOne(targetEntity: FormWidget::class)]
     private FormWidget $formWidget;

@@ -12,7 +12,7 @@ class FormWidget
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private int $id;
+    private null|string|int $id;
 
     #[ORM\Column(type: Types::INTEGER, enumType: FormTypes::class)]
     private FormTypes $formType;

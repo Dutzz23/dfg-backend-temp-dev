@@ -13,7 +13,7 @@ class UserData
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::BIGINT)]
-    private ?int $id = null;
+    private null|string|int $id = null;
     #[ORM\Column(type: Types::STRING)]
     private string $firstName;
     #[ORM\Column(type: Types::STRING)]
