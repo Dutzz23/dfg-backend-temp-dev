@@ -43,8 +43,8 @@ class FormResponse
                     continue;
                 }
                 if ($name === 'weight') {
-                    $item->$name = (float) $parameter->getValue();
-                    $totalWeight += $parameter->getValue();
+                    $item->$name =  $parameter->getValue() === null ? null : (float) $parameter->getValue();
+                    $totalWeight += (float) $parameter->getValue();
                     continue;
                 }
                 $item->$name = $parameter->getValue();
