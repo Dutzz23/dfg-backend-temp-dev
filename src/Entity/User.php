@@ -21,14 +21,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string|null The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
+
     #[ORM\OneToOne(targetEntity: UserData::class)]
     #[ORM\JoinColumn(name: 'user_data_id', referencedColumnName: 'id', nullable: true)]
     private ?UserData $userData = null;
+
+    #[ORM\Column]
+    private bool $isActive = false;
 
     public function getId(): ?int
     {
@@ -54,7 +55,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->username;
+        if($this->isActive) {
+            return (string)$this->username;
+        }
+        return 'inactiveUser';
     }
 
     /**
@@ -124,5 +128,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             return $this->userData->getFullName();
         }
         return $this->username;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): User
+    {
+        $this->isActive = $isActive;
+        return $this;
     }
 }

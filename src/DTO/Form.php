@@ -16,7 +16,6 @@ class Form extends AbstractIoDTO implements IoDTO
 {
     private const REQUIRED_FORM_ITEM_INDEXES = [
         FormItemService::FORM_ITEM_NAME,
-        FormItemService::FORM_ITEM_DESCRIPTION,
         FormItemService::FORM_ITEM_PARAMETERS
     ];
 
@@ -47,7 +46,8 @@ class Form extends AbstractIoDTO implements IoDTO
 
     private static function createForm(array $payload): static
     {
-        if (!isset($payload['formItems'])) {
+        dump($payload);
+        if (empty($payload['formItems']) || $payload['formItems'] === []) {
             throw new InvalidArgumentException('A form should always have form items, aka not be empty');
         }
         $formItems = [];
@@ -64,6 +64,7 @@ class Form extends AbstractIoDTO implements IoDTO
     private static function processFormItem(array $formItem): FormItem
     {
         if (!self::hasAllFieldsDefined($formItem, $missing)) {
+            dump($missing);
             throw new InvalidArgumentException(
                 sprintf('The following properties are missing %s', implode(', ', $missing))
             );
@@ -83,9 +84,14 @@ class Form extends AbstractIoDTO implements IoDTO
 
     private static function hasAllFieldsDefined(array $formItem, null|array &$missing = []): bool
     {
+        dump($formItem);
         $result = true;
+        dump(self::REQUIRED_FORM_ITEM_INDEXES);
         foreach (self::REQUIRED_FORM_ITEM_INDEXES as $key) {
+            dump($key);
             if (!isset($formItem[$key])) {
+                dump($key);
+                dump(isset($formItem[$key]));
                 $missing[] = $key;
                 $result = false;
             }
@@ -107,4 +113,6 @@ class Form extends AbstractIoDTO implements IoDTO
     {
         return $this->formItems;
     }
+
+
 }

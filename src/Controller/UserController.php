@@ -81,4 +81,10 @@ class UserController extends AbstractController
         }
         return new JsonResponse('User successfully deleted', Response::HTTP_OK);
     }
+
+    #[Route(path: '/api/user/{id}/verify/{code}', name: 'api_verify_user', methods: ['GET'])]
+    public function verifyUser(int $id, string $code): void
+    {
+        $this->service->verifyUser($this->service->getUser($id), $code);
+    }
 }

@@ -22,14 +22,17 @@ class FormItem
     #[ORM\Column(type: Types::STRING)]
     private string $name;
 
-    #[ORM\Column(type: Types::STRING)]
-    private string $description;
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $description = null;
 
     #[ORM\ManyToMany(targetEntity: FormWidgetParameterValue::class)]
     #[ORM\JoinTable(name: 'form_items_parameter_values')]
     #[ORM\JoinColumn(name: 'form_item_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'parameter_value_id', referencedColumnName: 'id')]
     private Collection $parameterValues;
+
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $desiredValue = null;
 
     public function __construct()
     {
@@ -80,6 +83,9 @@ class FormItem
         return $this;
     }
 
+    /**
+     * @return Collection<int, FormWidgetParameterValue>
+     */
     public function getParameterValues(): Collection
     {
         return $this->parameterValues;
@@ -98,6 +104,17 @@ class FormItem
         if ($this->parameterValues->contains($value)) {
             $this->parameterValues->removeElement($value);
         }
+        return $this;
+    }
+
+    public function getDesiredValue(): ?string
+    {
+        return $this->desiredValue;
+    }
+
+    public function setDesiredValue(?string $desiredValue): FormItem
+    {
+        $this->desiredValue = $desiredValue;
         return $this;
     }
 }

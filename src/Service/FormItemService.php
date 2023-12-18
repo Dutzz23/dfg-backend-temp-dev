@@ -24,6 +24,7 @@ class FormItemService
             self::FORM_ITEM_DESCRIPTION => $description,
             'formWidget' => $widget
         ]);
+        dump($formItem);
         if($formItem !== null) {
             return $formItem;
         }
@@ -31,7 +32,7 @@ class FormItemService
             ->setName($name)
             ->setDescription($description)
             ->setFormWidget($widget);
-
+        dump($formItem);
         foreach ($parameters as $parameterName => $parameterValue) {
             $formItem->addParameterValue(
                 FormItemParameterService::getOrCreate(
@@ -40,8 +41,10 @@ class FormItemService
                     $registry)
             );
         }
+        dump($formItem);
         $registry->getManager()->persist($formItem);
         $registry->getManager()->flush();
+        dump($formItem);
         return $formItem;
     }
 }

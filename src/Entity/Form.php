@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -27,9 +28,13 @@ class Form
     #[ORM\Column(type: Types::STRING)]
     private string $description;
 
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private DateTimeImmutable $updatedAt;
+
     public function __construct()
     {
         $this->formItems = new ArrayCollection();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): int
@@ -83,6 +88,17 @@ class Form
     public function setDescription(string $description): Form
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): Form
+    {
+        $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
         return $this;
     }
 }

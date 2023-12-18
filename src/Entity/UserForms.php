@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -24,9 +25,12 @@ class UserForms
     #[ORM\InverseJoinColumn(name: 'form_values_id', referencedColumnName: 'id')]
     private Collection $forms;
 
+    private DateTimeImmutable $updatedAt;
+
     public function __construct()
     {
         $this->forms = new ArrayCollection();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     /**
@@ -77,6 +81,17 @@ class UserForms
         if ($this->forms->contains($form)) {
             $this->forms->removeElement($form);
         }
+        return $this;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): UserForms
+    {
+        $this->updatedAt = $updatedAt ?? new DateTimeImmutable();
         return $this;
     }
 }

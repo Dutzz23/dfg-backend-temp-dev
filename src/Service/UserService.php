@@ -6,8 +6,11 @@ use App\Entity\Form;
 use App\Entity\User;
 use App\Entity\UserData;
 use App\Entity\UserForms;
+use App\Lib\Connector\Google\GmailService;
+use App\Lib\Connector\MailCreator;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +22,16 @@ class UserService
     public function __construct(
         private readonly UserRepository              $repository,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly ManagerRegistry $registryManager,
-        private readonly Security $security
-    ) {
+        private readonly ManagerRegistry             $registryManager,
+        private readonly Security                    $security,
+        private readonly GmailService                $mailService
+    )
+    {
     }
 
+    /**
+     * @throws Exception
+     */
     public function createUser(array $registerInput): User|false
     {
         if (!$this->validateData($registerInput)) {
@@ -43,9 +51,11 @@ class UserService
         $this->registryManager->getManager()->persist($newUser);
         try {
             $this->registryManager->getManager()->flush();
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            dump($e);
             return false;
         }
+        //$this->sendMail($newUser->getId(), $registerInput);
         return $newUser;
     }
 
@@ -110,6 +120,18 @@ class UserService
         return $user;
     }
 
+    /**
+     * @throws Exception
+     */
+    private function sendMail(int $userId, array $registerInput): void
+    {
+        $base = str_split('1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM');
+        shuffle($base);
+        $nonce = substr(implode(null, $base), 0, 12);
+        $code = $nonce . '.' . hash('md5', $registerInput['username']);
+        $this->mailService->send($registerInput['email'], MailCreator::create($userId, $registerInput['email'], $code));
+    }
+
     public function attachForm(Form $form): int
     {
         $userForms = $this->registryManager->getRepository(UserForms::class)
@@ -137,5 +159,15 @@ class UserService
             return 0;
         }
         return $user;
+    }
+
+    public function verifyUser(User $user, string $code): void {
+        $hash = substr($code, 12, null);
+        if(hash('md5', $user->getUserData()->getEmail()) !== $code) {
+            return;
+        }
+        $user->setIsActive(true);
+        $this->registryManager->getManager()->persist($user);
+        $this->registryManager->getManager()->flush();
     }
 }

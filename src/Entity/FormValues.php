@@ -22,50 +22,36 @@ class FormValues
     #[ORM\Column(type: Types::JSON)]
     private Collection $values;
 
+    #[ORM\ManyToOne(targetEntity: Form::class)]
+    private User $user;
+
     public function __construct()
     {
         $this->values = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return FormValues
-     */
     public function setId(int $id): FormValues
     {
         $this->id = $id;
         return $this;
     }
 
-    /**
-     * @return Form
-     */
     public function getForm(): Form
     {
         return $this->form;
     }
 
-    /**
-     * @param Form $form
-     * @return FormValues
-     */
     public function setForm(Form $form): FormValues
     {
         $this->form = $form;
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getValues(): Collection
     {
         return $this->values;
@@ -87,4 +73,14 @@ class FormValues
         return $this;
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): FormValues
+    {
+        $this->user = $user;
+        return $this;
+    }
 }
