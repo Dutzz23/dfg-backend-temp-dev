@@ -11,13 +11,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 
 class FormController extends AbstractController
 {
     public function __construct(
         private readonly FormService $service,
-        private readonly UserService $userService
+        private readonly UserService $userService,
+        private readonly SerializerInterface $serializer
     )
     {
     }
@@ -36,13 +39,13 @@ class FormController extends AbstractController
         return new JsonResponse($form->getId(), Response::HTTP_CREATED);
     }
 
-    #[Route(path: '/api/form/{id}', name: 'api_form_get', methods: ['GET'])]
+    #[Route(path: '/api/form/view/{id}', name: 'api_form_get', methods: ['GET'])]
     public function getPublicForm(int $id): JsonResponse
     {   $form = $this->service->getById($id);
         if($form === null) {
             return new JsonResponse('Not found', Response::HTTP_NOT_FOUND);
         }
-        return new JsonResponse($form, Response::HTTP_OK);
+        return new JsonResponse($this->serializer->serialize($form, 'json'), Response::HTTP_OK, [], true);
     }
 
     #[Route(path: '/api/form/user/all', name: 'api_form_get_for_user', methods: ['GET'])]

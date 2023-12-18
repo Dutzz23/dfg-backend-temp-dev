@@ -26,7 +26,8 @@
         "nelmio/cors-bundle": "^2.3.1",
         "google/apiclient": "^v2.15.0",
         "scheb/2fa-google-authenticator": "^6.8",
-        "phpseclib/phpseclib": "^3.0.34"
+        "phpseclib/phpseclib": "^3.0.34",
+        "symfony/serializer": "6.3.*"
     },
     "require-dev": {
         "symfony/maker-bundle": "^v1.51.1",
