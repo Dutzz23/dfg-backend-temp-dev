@@ -14,7 +14,7 @@ class FormItemService
 
     public static function getOrCreate(
         string $name,
-        string $description,
+        ?string $description,
         array $parameters,
         FormWidget $widget,
         ManagerRegistry $registry

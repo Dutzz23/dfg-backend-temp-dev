@@ -23,7 +23,7 @@ class Form extends AbstractIoDTO implements IoDTO
 
     protected function __construct(
         private readonly string $name,
-        private readonly string $description,
+        private readonly ?string $description,
         /**
          * @var FormItem[]
          */
@@ -63,8 +63,8 @@ class Form extends AbstractIoDTO implements IoDTO
 
     private static function processFormItem(array $formItem): FormItem
     {
+        dump($formItem);
         if (!self::hasAllFieldsDefined($formItem, $missing)) {
-            dump($missing);
             throw new InvalidArgumentException(
                 sprintf('The following properties are missing %s', implode(', ', $missing))
             );

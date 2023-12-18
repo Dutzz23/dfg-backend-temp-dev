@@ -17,8 +17,8 @@ class FormWidgetParameterValue
     #[ORM\ManyToOne(targetEntity: FormWidgetParameter::class)]
     private FormWidgetParameter $parameter;
 
-    #[ORM\Column(Types::STRING)]
-    private string $value;
+    #[ORM\Column(Types::STRING, nullable: true)]
+    private ?string $value;
 
     public function getId(): int
     {
@@ -47,7 +47,7 @@ class FormWidgetParameterValue
         return $this->value;
     }
 
-    public function setValue(string $value): FormWidgetParameterValue
+    public function setValue(?string $value): FormWidgetParameterValue
     {
         $this->value = $value;
         return $this;

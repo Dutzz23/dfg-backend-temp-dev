@@ -10,7 +10,7 @@ class FormItemParameterService
 {
     public static function getOrCreate(
         string $parameterName,
-        string $parameterValue,
+        ?string $parameterValue,
         ManagerRegistry $registry
     ): FormWidgetParameterValue
     {

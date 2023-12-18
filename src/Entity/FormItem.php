@@ -77,7 +77,7 @@ class FormItem
         return $this->description;
     }
 
-    public function setDescription(string $description): FormItem
+    public function setDescription(?string $description): FormItem
     {
         $this->description = $description;
         return $this;
