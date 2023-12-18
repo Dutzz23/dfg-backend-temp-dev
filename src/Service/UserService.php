@@ -17,7 +17,7 @@ use Throwable;
 class UserService
 {
     public function __construct(
-        private readonly UserRepository $repository,
+        private readonly UserRepository              $repository,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ManagerRegistry $registryManager,
         private readonly Security $security
@@ -66,17 +66,18 @@ class UserService
         return true;
     }
 
-    private function setUserData(User $newUser, array $registerInput): void {
+    private function setUserData(User $newUser, array $registerInput): void
+    {
 
         $newUserData = (new UserData());
 
-        if(!empty($registerInput['firstName'])) {
+        if (!empty($registerInput['firstName'])) {
             $newUserData->setFirstName($registerInput['firstName']);
         }
-        if(!empty($registerInput['lastName'])) {
+        if (!empty($registerInput['lastName'])) {
             $newUserData->setLastName($registerInput['lastName']);
         }
-        if(!empty($registerInput['email'])) {
+        if (!empty($registerInput['email'])) {
             $newUserData->setEmail($registerInput['email']);
         }
 
